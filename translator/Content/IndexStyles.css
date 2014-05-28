@@ -1,0 +1,16 @@
+﻿textarea {
+    width: 100%;
+}
+
+form {
+    /*for adjacent to the window edge like: http://www.editpad.org/ */
+    margin-left: -7px;
+    margin-right: -7px;
+}
+
+.main-text-area {
+    background-color: black;
+    color: white;
+    margin: 0px;
+    border: 1px dotted rgb(0, 0, 0);
+}
