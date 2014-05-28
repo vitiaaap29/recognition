@@ -17,12 +17,8 @@
     <script type="text/javascript" src="/Scripts/home-index.js"></script>
 </head>
 <body>
-    <div>
-        <% using (Html.BeginForm()){ %>
-            <%-- http://stackoverflow.com/questions/7895016/mvc3-html-helper-for-large-text-area --%>
-            <%= Html.TextArea("MangleWord", "Распознавание языка коротких слов", 5, 100,
-                new {@class = "main-text-area", })%>
-        <% }%>
+    <div class="editable-area" contenteditable="true">
+        
     </div>
 </body>
 </html>

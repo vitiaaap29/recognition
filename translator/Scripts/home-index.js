@@ -6,7 +6,8 @@ function ProcessMouseEventInTextArea() {
 
     this.init = function () {
         /* установка обработки нажатий или иных манипуляций */
-        $("textarea.main-text-area").mouseover(
+
+        $("div.editable-area").mouseover(
             function () {
                 console.log(Date.now() + ' mouse enter in textarea\n');
             }).mouseout(
