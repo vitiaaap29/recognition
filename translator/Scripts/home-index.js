@@ -41,15 +41,25 @@ function ProcessMouseEventInTextArea() {
 
     function wrapWordsInSpans() {
         var innerHtml = $("div.editable-area").html();
-        /* link on regular expression
-         * http://clck.ru/9CmRy
-         */
-        innerHtml = innerHtml.replace(/([\wа-яА-ЯёЁ]+(?=\s|<\w{1,4}>|[\.,\:\'\"]))/g, '<span>$1</span>');
+        // First need delete spans from previos invoke methods.
+        // http://clck.ru/9Cn2B
+        innerHtml = innerHtml.replace(/<span onmouseover=\"handlerMouseOverWord\(this\)\">([\wа-яА-ЯёЁ]+?)<\/span>/g,
+            "$1");
+
+        // link on regular expression.
+        // http://clck.ru/9CmRy
+        innerHtml = innerHtml.replace(/([\wа-яА-ЯёЁ]+(?=\s|<[\w\s]{1,4}>|[\.,\:\'\"]))/g,
+            "<span onmouseover='handlerMouseOverWord(this)'>$1</span>");
         //if situation <span>loo</span><span>k</span>
-        innerHtml = innerHtml.replace(/<\/span><span>/g, "");
+        innerHtml = innerHtml.replace(/<\/span><span onmouseover=\'handlerMouseOverWord\(this\)\'>/g, "");
 
         $("div.editable-area").html(innerHtml);
     }
+
+    function handlerMouseOverWord(element) {
+        console.log(Date.now() + " mouse over: " + element);
+    }
+    
 }
 
 var pseudoObject = null;

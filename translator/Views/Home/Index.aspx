@@ -10,15 +10,35 @@
         http://stackoverflow.com/questions/121382/is-there-a-way-to-comment-out-markup-in-an-aspx-page
     --%>
     <link href="~/Content/IndexStyles.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/tooltipster.css" rel="stylesheet" type="text/css" />
 
     <script type="text/javascript" src="/Scripts/jquery-1.7.1.min.js"></script> 
 
     <%-- http://www.codeproject.com/Questions/283914/adding-script-reference-to-aspx-page --%>
     <script type="text/javascript" src="/Scripts/home-index.js"></script>
+    <script type="text/javascript" src="/Scripts/jquery.tooltipster.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.tooltip').tooltipster({
+                content: $('#tooltip_content')
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="editable-area" contenteditable="true">
         
+    </div>
+
+    <div class="tooltip" title="This is my div's tooltip message!"> 
+        This div has a tooltip when you hover over it!
+    </div>
+
+    <div id="tooltip_content">
+        <ul>
+            <li>Eng</li>
+            <li>Rus</li>
+        </ul>
     </div>
 </body>
 </html>
