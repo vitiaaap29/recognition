@@ -3,36 +3,33 @@
 
 function ProcessMouseEventInTextArea() {
     _this = this;
-    counterPress = 0;
-    
+    oldMousePosition = {x: 0, y: 0};
+    wasEditing = false;
 
     this.init = function () {
-        /* установка обработки нажатий или иных манипуляций */
+        /* set handlers for events */
 
-        //$("div.editable-area").mouseover(
-        //    function () {
-        //        /* here was up tooltip*/
-        //        console.log(Date.now() + ' mouse enter in textarea\n');
-        //    }).mouseout(
-        //        function () {
-        //            /* here was down tooltip*/
-        //            console.log(Date.now() + ' mouse leave in textarea\n');
-        //        });
-
-        $("div.editable-area").on("paste copy cut",
+        $("div.editable-area").on("paste copy cut keyup",
             function () {
-                counterPress--;
+                wasEditing = true;
                 console.log(Date.now() + ' you edit textarea');
             }
         );
 
-        $("div.editable-area").on("keyup",
-           function () {
-               counterPress++;
-               if (counterPress % 4 == 0) {
-                   wrapWordsInSpans();
-                   console.log(Date.now() + ' you edit textarea ' + counterPress);
-               }
+        $("div.editable-area").on("mousemove",
+            function (e) {
+                if (wasEditing) {
+                    var diff = { x: Math.abs(oldMousePosition.x - e.pageX), y: Math.abs(oldMousePosition.y - e.pageY) };
+                    var distance = Math.sqrt(diff.x * diff.x + diff.y * diff.y);
+                    console.log(Date.now() + ' you movve mouse up area distance= ' + distance);
+                    oldMousePosition.x = e.pageX;
+                    oldMousePosition.y = e.pageY;
+                    if (distance > 10) {
+                        wrapWordsInSpans();
+                        console.log(Date.now() + ' you move mouse up area ');
+                    }
+                    wasEditing = false;
+                }
            }
        );
     }
@@ -45,9 +42,12 @@ function ProcessMouseEventInTextArea() {
     function wrapWordsInSpans() {
         var innerHtml = $("div.editable-area").html();
         /* link on regular expression
-         * http://scriptular.com/#[\w]%2B%28%3F%3D\s|%3Cbr%3E%29||||g||||[%22i%20look%20inside%20my%20self%3Cbr%3E%3Cbr%3Eand%20i%20see%20my%20%3Cbr%3E%3Cbr%3Ehurt%20is%20black%3Cbr%3E%22%2C%22%20%20%20%20%20%20%20%20%22%2C%22%20%20%20%20%22]
+         * http://clck.ru/9CmRy
          */
-        innerHtml = innerHtml.replace(/([\w]+(?=\s|<br>))/g, "<span class='word'>$1</span>");
+        innerHtml = innerHtml.replace(/([\wа-яА-ЯёЁ]+(?=\s|<\w{1,4}>|[\.,\:\'\"]))/g, '<span>$1</span>');
+        //if situation <span>loo</span><span>k</span>
+        innerHtml = innerHtml.replace(/<\/span><span>/g, "");
+
         $("div.editable-area").html(innerHtml);
     }
 }
