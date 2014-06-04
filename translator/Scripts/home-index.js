@@ -25,7 +25,18 @@ function ProcessMouseEventInTextArea() {
                     oldMousePosition.x = e.pageX;
                     oldMousePosition.y = e.pageY;
                     if (distance > 10) {
+                        //get cursor position
+                        cursorPos = document.selection.createRange().duplicate();
+                        clickx = cursorPos.getBoundingClientRect().left;
+                        clicky = cursorPos.getBoundingClientRect().top;
+
                         wrapWordsInSpans();
+
+                        //set cursor position
+                        cursorPos = document.body.createTextRange();
+                        cursorPos.moveToPoint(clickx, clicky);
+                        cursorPos.select();
+
                         console.log(Date.now() + ' you move mouse up area ');
                     }
                     wasEditing = false;
@@ -48,11 +59,14 @@ function ProcessMouseEventInTextArea() {
 
         // link on regular expression.
         // http://clck.ru/9CmRy
-        innerHtml = innerHtml.replace(/([\wа-яА-ЯёЁ]+(?=\s|<[\w\s]{1,4}>|[\.,\:\'\"]))/g,
-            "<span onmouseover='handlerMouseOverWord(this)'>$1</span>");
-        //if situation <span>loo</span><span>k</span>
-        innerHtml = innerHtml.replace(/<\/span><span onmouseover=\'handlerMouseOverWord\(this\)\'>/g, "");
+        innerHtml = innerHtml.replace(/([\wа-яА-ЯёЁ]+(?=\s(?!onmouseover)|<[\w\s]{1,4}>|[\.,\:\'\"]))/g,
+            "<span onmouseover=\"handlerMouseOverWord(this)\">$1</span>");
 
+        //if situation <span>loo</span><span>k</span>
+        innerHtml = innerHtml.replace(/<\/span><span onmouseover=\"handlerMouseOverWord\(this\)\">/g, "");
+
+        //delete collision <span onmouseover=...></span>
+        innerHtml = innerHtml.replace(/<span onmouseover=\"handlerMouseOverWord\(this\)\"><\/span>/g, "");
         $("div.editable-area").html(innerHtml);
     }
 
