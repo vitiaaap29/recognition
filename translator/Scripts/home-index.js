@@ -13,8 +13,6 @@ function ProcessMouseEventInTextArea() {
         $("div.editable-area").on("paste copy cut keyup",
             function () {
                 wasEditing = true;
-                //console.log(getCaretPosition(this));
-                //saver = saveSelection();
                 console.log(Date.now() + ' you edit textarea');
             }
         );
@@ -29,10 +27,7 @@ function ProcessMouseEventInTextArea() {
                     oldMousePosition.y = e.pageY;
                     if (distance > 10) {
                         //http://www.sitepoint.com/forums/showthread.php?230443-Saving-restoring-caret-position-in-a-contentEditable-div
-                        saver = saveSelection();
                         wrapWordsInSpans();
-                        restoreSelection(saver);
-
                         console.log(Date.now() + ' DISTANCE LESS 10 ');
                     }
                     wasEditing = false;
@@ -70,30 +65,6 @@ function ProcessMouseEventInTextArea() {
         console.log(Date.now() + " mouse over: " + element);
     }
 
-    function saveSelection() {
-        if (window.getSelection) {
-            sel = window.getSelection();
-            if (sel.getRangeAt && sel.rangeCount) {
-                return sel.getRangeAt(0);
-            }
-        } else if (document.selection && document.selection.createRange) {
-            return document.selection.createRange();
-        }
-        return null;
-    }
-
-    function restoreSelection(range) {
-        if (range) {
-            if (window.getSelection) {
-                sel = window.getSelection();
-                sel.removeAllRanges();
-                sel.addRange(range);
-            } else if (document.selection && range.select) {
-                range.select();
-            }
-        }
-    }
-    
 }
 
 var pseudoObject = null;
