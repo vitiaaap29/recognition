@@ -16,7 +16,7 @@
 
     <%-- http://www.codeproject.com/Questions/283914/adding-script-reference-to-aspx-page --%>
     <script type="text/javascript" src="/Scripts/home-index.js"></script>
-    <script type="text/javascript" src="/Scripts/jquery.tooltipster.min.js"></script>
+    <script type="text/javascript" src="/Scripts/jquery.tooltipster.min.js"></script> 
     <script>
         $(document).ready(function () {
             $('.tooltip').tooltipster({

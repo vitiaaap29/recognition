@@ -1,17 +1,20 @@
 ﻿//here plan how to do this site:
 //http://stackoverflow.com/questions/2918434/javascript-displaying-tooltip-when-mouse-is-hovered-a-certain-word-in-a-textare
 
+
 function ProcessMouseEventInTextArea() {
     _this = this;
     oldMousePosition = {x: 0, y: 0};
     wasEditing = false;
-
+    saver = null;
     this.init = function () {
         /* set handlers for events */
 
         $("div.editable-area").on("paste copy cut keyup",
             function () {
                 wasEditing = true;
+                //console.log(getCaretPosition(this));
+                //saver = saveSelection();
                 console.log(Date.now() + ' you edit textarea');
             }
         );
@@ -25,19 +28,12 @@ function ProcessMouseEventInTextArea() {
                     oldMousePosition.x = e.pageX;
                     oldMousePosition.y = e.pageY;
                     if (distance > 10) {
-                        //get cursor position
-                        cursorPos = document.selection.createRange().duplicate();
-                        clickx = cursorPos.getBoundingClientRect().left;
-                        clicky = cursorPos.getBoundingClientRect().top;
-
+                        //http://www.sitepoint.com/forums/showthread.php?230443-Saving-restoring-caret-position-in-a-contentEditable-div
+                        saver = saveSelection();
                         wrapWordsInSpans();
+                        restoreSelection(saver);
 
-                        //set cursor position
-                        cursorPos = document.body.createTextRange();
-                        cursorPos.moveToPoint(clickx, clicky);
-                        cursorPos.select();
-
-                        console.log(Date.now() + ' you move mouse up area ');
+                        console.log(Date.now() + ' DISTANCE LESS 10 ');
                     }
                     wasEditing = false;
                 }
@@ -54,7 +50,7 @@ function ProcessMouseEventInTextArea() {
         var innerHtml = $("div.editable-area").html();
         // First need delete spans from previos invoke methods.
         // http://clck.ru/9Cn2B
-        innerHtml = innerHtml.replace(/<span onmouseover=\"handlerMouseOverWord\(this\)\">([\wа-яА-ЯёЁ]+?)<\/span>/g,
+        innerHtml = innerHtml.replace(/<span onmouseover=\"handlerMouseOverWord\(this\)\">([\wа-яА-ЯёЁ\<\>]+?)<\/span>/g,
             "$1");
 
         // link on regular expression.
@@ -72,6 +68,30 @@ function ProcessMouseEventInTextArea() {
 
     function handlerMouseOverWord(element) {
         console.log(Date.now() + " mouse over: " + element);
+    }
+
+    function saveSelection() {
+        if (window.getSelection) {
+            sel = window.getSelection();
+            if (sel.getRangeAt && sel.rangeCount) {
+                return sel.getRangeAt(0);
+            }
+        } else if (document.selection && document.selection.createRange) {
+            return document.selection.createRange();
+        }
+        return null;
+    }
+
+    function restoreSelection(range) {
+        if (range) {
+            if (window.getSelection) {
+                sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+            } else if (document.selection && range.select) {
+                range.select();
+            }
+        }
     }
     
 }
