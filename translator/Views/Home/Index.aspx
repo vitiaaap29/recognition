@@ -19,26 +19,36 @@
     <script type="text/javascript" src="/Scripts/jquery.tooltipster.min.js"></script> 
     <script>
         $(document).ready(function () {
-            $('.tooltip').tooltipster({
-                content: $('#tooltip_content')
+            $('.word').tooltipster({
+                content: 'Loading...',
+                functionBefore: function (origin, continueTooltip) {
+
+                    // we'll make this function asynchronous and allow the tooltip to go ahead and show the loading notification while fetching our data
+                    continueTooltip();
+
+                    // next, we want to check if our data has already been cached
+                    if (origin.data('ajax') !== 'cached') {
+                        var wordInCurrentSpan = $(origin).val();
+                        //console.log("Sie bla before tooltip " + 
+                        $.ajax({
+                            type: 'POST',
+                            url: "/Home/Recognize",
+                            data: { 'word': wordInCurrentSpan },
+                            success: function (data) {
+                                // update our tooltip content with our returned data and cache it
+                                origin.tooltipster('content', data).data('ajax', 'cached');
+                            }
+                        });
+                    }
+                }
             });
         });
+
     </script>
 </head>
 <body>
     <div class="editable-area" contenteditable="true">
         
-    </div>
-
-    <div class="tooltip" title="This is my div's tooltip message!"> 
-        This div has a tooltip when you hover over it!
-    </div>
-
-    <div id="tooltip_content">
-        <ul>
-            <li>Eng</li>
-            <li>Rus</li>
-        </ul>
     </div>
 </body>
 </html>

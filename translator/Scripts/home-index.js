@@ -6,7 +6,7 @@ function ProcessMouseEventInTextArea() {
     _this = this;
     oldMousePosition = {x: 0, y: 0};
     wasEditing = false;
-    saver = null;
+
     this.init = function () {
         /* set handlers for events */
 
@@ -34,6 +34,8 @@ function ProcessMouseEventInTextArea() {
                 }
            }
        );
+
+        //$('.word').tooltipster();
     }
 
     /* public methods*/
@@ -44,25 +46,20 @@ function ProcessMouseEventInTextArea() {
     function wrapWordsInSpans() {
         var innerHtml = $("div.editable-area").html();
         // First need delete spans from previos invoke methods.
-        // http://clck.ru/9Cn2B
-        innerHtml = innerHtml.replace(/<span onmouseover=\"handlerMouseOverWord\(this\)\">([\wа-яА-ЯёЁ\<\>]+?)<\/span>/g,
+        innerHtml = innerHtml.replace(/<span class=\"word\">([\wа-яА-ЯёЁ\<\>]+?)<\/span>/g,
             "$1");
 
         // link on regular expression.
         // http://clck.ru/9CmRy
-        innerHtml = innerHtml.replace(/([\wа-яА-ЯёЁ]+(?=\s(?!onmouseover)|<[\w\s]{1,4}>|[\.,\:\'\"]))/g,
-            "<span onmouseover=\"handlerMouseOverWord(this)\">$1</span>");
+        innerHtml = innerHtml.replace(/([\wа-яА-ЯёЁ]+(?=\s(?!class)|<[\w\s]{1,4}>|[\.,\:\'\"]))/g,
+            "<span class=\"word\">$1</span>");
 
         //if situation <span>loo</span><span>k</span>
-        innerHtml = innerHtml.replace(/<\/span><span onmouseover=\"handlerMouseOverWord\(this\)\">/g, "");
+        innerHtml = innerHtml.replace(/<\/span><span class=\"word\">/g, "");
 
         //delete collision <span onmouseover=...></span>
-        innerHtml = innerHtml.replace(/<span onmouseover=\"handlerMouseOverWord\(this\)\"><\/span>/g, "");
+        innerHtml = innerHtml.replace(/<span class=\"word\"><\/span>/g, "");
         $("div.editable-area").html(innerHtml);
-    }
-
-    function handlerMouseOverWord(element) {
-        console.log(Date.now() + " mouse over: " + element);
     }
 
 }
