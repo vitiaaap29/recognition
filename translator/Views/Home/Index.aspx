@@ -18,30 +18,12 @@
     <script type="text/javascript" src="/Scripts/home-index.js"></script>
     <script type="text/javascript" src="/Scripts/jquery.tooltipster.min.js"></script> 
     <script>
+
+    <%--
+        https://github.com/iamceege/tooltipster
+        --%>
         $(document).ready(function () {
-            $('.word').tooltipster({
-                content: 'Loading...',
-                functionBefore: function (origin, continueTooltip) {
-
-                    // we'll make this function asynchronous and allow the tooltip to go ahead and show the loading notification while fetching our data
-                    continueTooltip();
-
-                    // next, we want to check if our data has already been cached
-                    if (origin.data('ajax') !== 'cached') {
-                        var wordInCurrentSpan = $(origin).val();
-                        //console.log("Sie bla before tooltip " + 
-                        $.ajax({
-                            type: 'POST',
-                            url: "/Home/Recognize",
-                            data: { 'word': wordInCurrentSpan },
-                            success: function (data) {
-                                // update our tooltip content with our returned data and cache it
-                                origin.tooltipster('content', data).data('ajax', 'cached');
-                            }
-                        });
-                    }
-                }
-            });
+            
         });
 
     </script>
