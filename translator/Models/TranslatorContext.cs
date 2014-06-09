@@ -15,7 +15,8 @@ namespace translator.Models
         public DbSet<Language> Langs { get; set; }
         private readonly String dbFilePath = @"./Model/translator.sqlite";
 
-        public TranslatorContext()
+        public TranslatorContext():
+            base("TranslatorConnection")
         {
             //if (!File.Exists(dbFilePath))
             //{
@@ -24,8 +25,7 @@ namespace translator.Models
             //    m_dbConnection.Open();
             //    string sql = "create table words (name varchar(20), score int)";
             //}
-            Database.CreateIfNotExists();
+            //Database.CreateIfNotExists();
         }
     }
-    //translator.Models.TranslatorContext
 }

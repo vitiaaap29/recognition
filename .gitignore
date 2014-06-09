@@ -2,6 +2,8 @@
 [Tt]humbs.db
 *.DS_Store
 *.csproj
+*.sqlite
+*.ldf
 
 #Visual Studio files
 *.[Oo]bj

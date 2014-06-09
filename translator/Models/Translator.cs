@@ -7,55 +7,76 @@ namespace translator.Models
 {
     public class Translator
     {
-        public String MangleWord { get; private set; }
-        public Dictionary<String, float> PercentTable { get; private set; }
-        private List<Entities.Language> langs;
+        private List<Entities.Language> langs = null;
+        private Dictionary<String, float> percentTable;
 
-        public Translator(String word): this()
-        {
-            MangleWord = word;
+        public Dictionary<String, float> PercentTable 
+        { 
+            get
+            {
+                return percentTable;
+            }
+            private set
+            {
+                if (percentTable.Count >= langs.Count)
+                {
+                    percentTable.Clear();
+                }
+                percentTable = value;
+            }
         }
 
         public Translator()
         {
-            PercentTable = new Dictionary<string, float>();
-            langs = new List<Entities.Language>();
-            langs.Add( new Entities.Language
+            if (langs == null)
+            {
+                percentTable = new Dictionary<string, float>();
+                langs = new List<Entities.Language>();
+                langs.Add( new Entities.Language
+                    {
+                        LanguageId = 0,
+                        Name = "Russian",
+                        Words = null
+                    });
+                langs.Add(new Entities.Language
                 {
-                    LanguageId = 0,
-                    Name = "Russian",
+                    LanguageId = 1,
+                    Name = "English",
                     Words = null
                 });
+
+                //using (var context = new TranslatorContext())
+                //{
+                //    foreach (Entities.Language l in langs)
+                //    {
+                //        context.Langs.Add(l);
+                //    }
+                //    context.SaveChanges();
+                //}
+            }
+        }
+
+        public void CalculatePercentReliability(String word)
+        {
+            int percent = 0;
             using (var context = new TranslatorContext())
             {
-                context.Langs.Add(langs[0]);
-            }
-        }
-
-        public void CalculatePercentReliability()
-        {
-            if (MangleWord != null)
-            {
-                //here was request to BD
-
-                int percent = 0;
-                using (var context = new TranslatorContext())
+                context.Words.Add(new Entities.Word
                 {
-                    context.Words.Add(new Entities.Word
-                    {
-                        WordId = 0,
-                        Text = MangleWord,
-                        LanguageId = 0,
-                        Language = (from l in context.Langs orderby l.LanguageId select l).FirstOrDefault(a => a.LanguageId == 0)
-                    });
+                    //WordId = Entities.Word.NextId,
+                    Text = word,
+                    LanguageId = 1,
+                    //Language = (from l in context.Langs orderby l.LanguageId select l).FirstOrDefault(a => a.LanguageId == 0)
+                });
 
-                    percent = context.Words.Count();
-                }
+                context.SaveChanges();
 
-
-                PercentTable.Add("English_" + MangleWord, 100 - percent);
-                PercentTable.Add("Russian_" + MangleWord, percent);
+                percent = context.Words.Count();
             }
+
+            PercentTable.Add("English_" + word, 100 - percent);
+            PercentTable.Add("Russian_" + word, percent);
         }
+
     }
 }

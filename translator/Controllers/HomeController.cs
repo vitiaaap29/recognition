@@ -10,6 +10,7 @@ namespace translator.Controllers
     public class HomeController : Controller
     {
         public readonly String k = "dd";
+        private Translator dbAdapter;
 
         public ActionResult Index()
         {
@@ -19,9 +20,9 @@ namespace translator.Controllers
         [HttpPost]
         public ActionResult Recognize(String word)
         {
-            Translator translator = new Translator(word);
-            translator.CalculatePercentReliability();
-            return PartialView("PersentTablePartial", translator);
+            dbAdapter = new Translator();
+            dbAdapter.CalculatePercentReliability(word);
+            return PartialView("PersentTablePartial", dbAdapter);
         }
 
     }

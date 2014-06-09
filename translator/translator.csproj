@@ -111,6 +111,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Entities\Entity.cs" />
     <Compile Include="Models\Entities\Language.cs" />
     <Compile Include="Models\Entities\Word.cs" />
     <Compile Include="Models\Translator.cs" />
@@ -194,7 +195,9 @@
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Views\Home\Index.aspx" />
     <Content Include="Views\Home\PersentTablePartial.ascx" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
