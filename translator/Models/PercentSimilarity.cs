@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace translator.Models
+namespace translator.Models.PercentSimilarity
 {
-    public class PercentSimilarity
+    public static class PercentSimilarity
     {
-        public float PercentOfSimilarity(this string obj, string str)
+        public static float PercentOfSimilarity(this String obj, string str)
         {
             float result = 0;
             if (obj[0] == str[0])

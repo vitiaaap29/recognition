@@ -111,9 +111,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Entities\Entity.cs" />
     <Compile Include="Models\Entities\Language.cs" />
     <Compile Include="Models\Entities\Word.cs" />
+    <Compile Include="Models\PercentSimilarity.cs" />
     <Compile Include="Models\Translator.cs" />
     <Compile Include="Models\TranslatorContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
