@@ -111,6 +111,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DbOperationException\UndefineLangException.cs" />
     <Compile Include="Models\Entities\Language.cs" />
     <Compile Include="Models\Entities\Word.cs" />
     <Compile Include="Models\PercentSimilarity.cs" />

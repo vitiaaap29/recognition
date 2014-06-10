@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using translator.Models.Entities;
 using translator.Models.PercentSimilarity;
+using translator.Models.DbOperationException;
 
 namespace translator.Models
 {
@@ -13,42 +14,23 @@ namespace translator.Models
 
         public static int MinLengthWord = 4;
         public bool IsWordTooSmall { get; private set; }
+        public String CurrentWord { get; private set; }
 
         public Dictionary<String, float> PercentTable { get; private set; }
 
         public Translator()
         {
             PercentTable = new Dictionary<string, float>();
-            //if (langs == null)
-            //{
-            //    PercentTable = new Dictionary<string, float>();
-            //    langs = new List<Language>();
-            //    langs.Add( new Language
-            //        {
-            //            LanguageId = 0,
-            //            Name = "Russian",
-            //            Words = null
-            //        });
-            //    langs.Add(new Language
-            //    {
-            //        LanguageId = 1,
-            //        Name = "English",
-            //        Words = null
-            //    });
-
-            //    //using (var context = new TranslatorContext())
-            //    //{
-            //    //    foreach (Entities.Language l in langs)
-            //    //    {
-            //    //        context.Langs.Add(l);
-            //    //    }
-            //    //    context.SaveChanges();
-            //    //}
-            //}
         }
 
+        /// <summary>
+        /// Считаем словарь: язык => процент
+        /// по вем языкам
+        /// </summary>
+        /// <param name="word"></param>
         public void CalculatePercentReliability(String word)
         {
+            CurrentWord = word;
             if (word.Length >= MinLengthWord)
             {
                 IsWordTooSmall = false;
@@ -56,33 +38,36 @@ namespace translator.Models
                 using (var context = new TranslatorContext())
                 {
                     var words = from w in context.Words orderby w.WordId select w;
-
-                    Dictionary<float, String> bigThanZeroPercents = new Dictionary<float, String>();
+                    
+                    //get langId => percent
+                    List<KeyValuePair<int, float>> langIdAndPercent = new List<KeyValuePair<int, float>>(words.Count());
                     foreach (var w in words)
                     {
                         float percent = word.PercentOfSimilarity(w.Text);
                         if (percent > 0)
                         {
-                            var langName = 
-                                (from l in context.Langs where l.LanguageId == w.LanguageId 
-                                 select l.Name);
-                            bigThanZeroPercents.Add(percent, (String)langName.First());
+                            langIdAndPercent.Add(new KeyValuePair<int, float>(w.LanguageId, percent));
                         }
                     }
 
-                    var namesLangs = (from l in context.Langs orderby l.LanguageId 
-                         select l.Name).Take(context.Langs.Count());
+                    //get langName => max percent
+                    var langsIds = from l in context.Langs orderby l.LanguageId select l.LanguageId;
 
-                    foreach (String nameLang in namesLangs)
+                    foreach (int langId in langsIds)
                     {
-                        var listPercentCurrentLang = 
-                            (from percent in bigThanZeroPercents  where percent.Value == nameLang 
-                             orderby percent.Key descending select percent);
-                        if (listPercentCurrentLang.Count() > 0)
+                        var listPercentCurrentLangId = 
+                            from idPercent in langIdAndPercent where idPercent.Key == langId 
+                            orderby idPercent.Value descending select idPercent.Value;
+
+                        if (listPercentCurrentLangId.Count() > 0)
                         {
-                            PercentTable.Add(nameLang, listPercentCurrentLang.First().Key);
+                            var nameLang = 
+                                (from l in context.Langs where l.LanguageId == langId select l.Name).First();
+                            PercentTable.Add(nameLang, listPercentCurrentLangId.First());
                         }
                     }
+
+                    //if (PercentTable.)
                     
                 }
 
@@ -93,6 +78,32 @@ namespace translator.Models
                 IsWordTooSmall = true;
             }
         }
-
+        /// <summary>
+        /// Add new word to database.
+        /// </summary>
+        /// <param name="word">Word, which added to the base</param>
+        /// <param name="languageName">Name language, if this name does not exist, than throw 
+        /// UndefineLangException</param>
+        public void AddWord(String word, String languageName)
+        {
+            using (var context = new TranslatorContext())
+            {
+                var languagesWithPassedName = 
+                    from l in context.Langs where l.Name == languageName select l.LanguageId;
+                if (languageName.Count() > 0)
+                {
+                    int langId = languageName.First();
+                    context.Words.Add(new Word
+                    {
+                        LanguageId = langId,
+                        Text = word
+                    });
+                }
+                else
+                {
+                    throw new UndefineLangException();
+                }
+            }
+        }
     }
 }

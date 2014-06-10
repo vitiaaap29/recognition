@@ -52,12 +52,9 @@ function ProcessMouseEventInTextArea() {
                     oldMousePosition.x = e.pageX;
                     oldMousePosition.y = e.pageY;
                     if (distance > 10) {
-
                         wrapWordsInSpans();
 
-                        //$('.word').tooltipster('destroy');
                         initTooltipster();
-
                         console.log(Date.now() + ' DISTANCE LESS 10 ');
                     }
                     wasEditing = false;
