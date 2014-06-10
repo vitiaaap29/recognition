@@ -11,6 +11,8 @@ function ProcessMouseEventInTextArea() {
         /* set handlers for events */
 
         $('.word').tooltipster({
+            interactive: true,
+            //autoClose: false,
             content: 'Loading...',
             functionBefore: function (origin, continueTooltip) {
 
@@ -73,10 +75,11 @@ function ProcessMouseEventInTextArea() {
     function wrapWordsInSpans() {
         var innerHtml = $("div.editable-area").html();
         // First need delete spans from previos invoke methods.
-        innerHtml = innerHtml.replace(/<span class=\"word tooltipstered\">([\wа-яА-ЯёЁ\<\>]+?)<\/span>/g,
+        // http://clck.ru/9DPyQ
+        innerHtml = innerHtml.replace(/<span class=\"word tooltipstered\">(([\s\wа-яА-ЯёЁ\<\>]+?)|())<\/span>/g,
             "$1");
 
-        // link on regular expression.
+        // Wrap words in spans.
         // http://clck.ru/9CmRy
         innerHtml = innerHtml.replace(/([\wа-яА-ЯёЁ]+(?=\s(?!class)|<[\w\s]{1,4}>|[\.,\:\'\"]))/g,
             "<span class=\"word tooltipstered\">$1</span>");
@@ -91,6 +94,7 @@ function ProcessMouseEventInTextArea() {
 
     function initTooltipster() {
         $('.word').tooltipster({
+            interactive: true,
             content: 'Loading...',
             functionBefore: function (origin, continueTooltip) {
 
