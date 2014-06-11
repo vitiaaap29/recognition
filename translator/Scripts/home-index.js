@@ -6,6 +6,7 @@ function ProcessMouseEventInTextArea() {
     _this = this;
     oldMousePosition = {x: 0, y: 0};
     wasEditing = false;
+    sensitivityMouse = 7;
 
     this.init = function () {
         /* set handlers for events */
@@ -48,7 +49,7 @@ function ProcessMouseEventInTextArea() {
 
                     oldMousePosition.x = e.pageX;
                     oldMousePosition.y = e.pageY;
-                    if (distance > 10) {
+                    if (distance > sensitivityMouse) {
                         wrapWordsInSpans();
 
                         initTooltipster();
@@ -74,8 +75,8 @@ function ProcessMouseEventInTextArea() {
             "$1");
 
         // Wrap words in spans.
-        // http://clck.ru/9DTcf
-        innerHtml = innerHtml.replace(/([\wа-яА-ЯёЁ]+(?=\s(?!class)|<[\w\s]{1,4}>|[\.,\:\'\"\&]))/g,
+        // http://clck.ru/9DU2v
+        innerHtml = innerHtml.replace(/([\wа-яА-ЯёЁ]+(?=\s(?!class)|<[\w\s]{1,4}>|[\.\?\!,\:\'\"\&]|[<]|$))/g,
             "<span class=\"word tooltipstered\">$1</span>");
 
         //if situation <span>loo</span><span>k</span>
@@ -136,4 +137,6 @@ var pseudoObject = null;
 $().ready(function () {
     pseudoObject = new ProcessMouseEventInTextArea();
     pseudoObject.init();
+    //heigth by screen heigth
+    document.getElementById('editable_div').style.height = window.innerHeight + 'px';
 });

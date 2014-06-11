@@ -1,5 +1,7 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<dynamic>" %>
 
+<script type="text/javascript" src="/Scripts/home-index.js"></script>
+
 <script type="text/javascript">
     function sendAjaxByLanguageLink(id) {
         var wordUnderTolltip = $('#word_in_tooltip').val();
