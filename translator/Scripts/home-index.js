@@ -21,7 +21,6 @@ function ProcessMouseEventInTextArea() {
                 // next, we want to check if our data has already been cached
                 if (origin.data('ajax') !== 'cached') {
                     var wordInCurrentSpan = $(origin).val();
-                    //console.log("Sie bla before tooltip " + 
                     $.ajax({
                         type: 'POST',
                         url: "/Home/Recognize",
@@ -38,7 +37,6 @@ function ProcessMouseEventInTextArea() {
         $("div.editable-area").on("paste copy cut keyup",
             function () {
                 wasEditing = true;
-                console.log(Date.now() + ' you edit textarea');
             }
         );
 
@@ -48,14 +46,13 @@ function ProcessMouseEventInTextArea() {
                     var diff = { x: Math.abs(oldMousePosition.x - e.pageX), y: Math.abs(oldMousePosition.y - e.pageY) };
                     var distance = Math.sqrt(diff.x * diff.x + diff.y * diff.y);
 
-                    console.log(Date.now() + ' you movve mouse up area distance= ' + distance);
                     oldMousePosition.x = e.pageX;
                     oldMousePosition.y = e.pageY;
                     if (distance > 10) {
                         wrapWordsInSpans();
 
                         initTooltipster();
-                        console.log(Date.now() + ' DISTANCE LESS 10 ');
+                        placeCaretAtEnd(document.getElementById("editable_div"));
                     }
                     wasEditing = false;
                 }
@@ -77,8 +74,8 @@ function ProcessMouseEventInTextArea() {
             "$1");
 
         // Wrap words in spans.
-        // http://clck.ru/9CmRy
-        innerHtml = innerHtml.replace(/([\wа-яА-ЯёЁ]+(?=\s(?!class)|<[\w\s]{1,4}>|[\.,\:\'\"]))/g,
+        // http://clck.ru/9DTcf
+        innerHtml = innerHtml.replace(/([\wа-яА-ЯёЁ]+(?=\s(?!class)|<[\w\s]{1,4}>|[\.,\:\'\"\&]))/g,
             "<span class=\"word tooltipstered\">$1</span>");
 
         //if situation <span>loo</span><span>k</span>
@@ -113,6 +110,25 @@ function ProcessMouseEventInTextArea() {
                 }
             }
         });
+    }
+
+    //http://stackoverflow.com/questions/4233265/contenteditable-set-caret-at-the-end-of-the-text-cross-browser/4238971#4238971
+    function placeCaretAtEnd(el) {
+        el.focus();
+        if (typeof window.getSelection != "undefined"
+                && typeof document.createRange != "undefined") {
+            var range = document.createRange();
+            range.selectNodeContents(el);
+            range.collapse(false);
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        } else if (typeof document.body.createTextRange != "undefined") {
+            var textRange = document.body.createTextRange();
+            textRange.moveToElementText(el);
+            textRange.collapse(false);
+            textRange.select();
+        }
     }
 }
 

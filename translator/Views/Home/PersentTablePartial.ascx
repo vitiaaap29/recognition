@@ -4,8 +4,6 @@
     function sendAjaxByLanguageLink(id) {
         var wordUnderTolltip = $('#word_in_tooltip').val();
         var language = $('#' + id).text().trim();
-        console.log("sendAjaxByLanguageLink: i am work by click: word => " + wordUnderTolltip
-            + " id => " + id + " lang =>" + language);
        
         $.ajax({
             type: 'POST',
@@ -15,6 +13,7 @@
                 $('.tooltip-content').html(response);
             }
         });
+
         return false;
     }
 </script>
@@ -26,12 +25,14 @@
                { %>
                 <tr>
                     <td>
-                        <a href="#" id="<%= percentAndLang.Key %>" onclick="sendAjaxByLanguageLink(this.id);">
+                        <a href="#" id="<%= percentAndLang.Key %>" onclick="sendAjaxByLanguageLink(this.id);" style="color: thistle">
                             <%= percentAndLang.Key + " "%>
                         </a>
                     </td>
-
-                     <%= percentAndLang.Value.ToString() + '%' %>
+                    <td>
+                        <%= percentAndLang.Value.ToString() + '%' %>
+                    </td>
+                     
                 </tr>
             <% } %>
         <% else {%>

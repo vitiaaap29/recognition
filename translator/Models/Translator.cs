@@ -10,8 +10,6 @@ namespace translator.Models
 {
     public class Translator
     {
-        //private List<Entities.Language> langs = null;
-
         public static int MinLengthWord = 4;
         public bool IsWordTooSmall { get; private set; }
         public String CurrentWord { get; private set; }
@@ -67,17 +65,23 @@ namespace translator.Models
                         }
                     }
 
-                    //if (PercentTable.)
-                    
+                    //if all by 0 percent
+                    if (PercentTable.Count == 0)
+                    {
+                        var langsNames = from l in context.Langs orderby l.LanguageId select l.Name;
+                        foreach (String name in langsNames)
+                        {
+                            PercentTable.Add(name, 0);
+                        }
+                    } 
                 }
-
-
             }
             else
             {
                 IsWordTooSmall = true;
             }
         }
+       
         /// <summary>
         /// Add new word to database.
         /// </summary>
@@ -88,16 +92,17 @@ namespace translator.Models
         {
             using (var context = new TranslatorContext())
             {
-                var languagesWithPassedName = 
+                var languageIdsAccordingName = 
                     from l in context.Langs where l.Name == languageName select l.LanguageId;
-                if (languageName.Count() > 0)
+                if (languageIdsAccordingName.Count() > 0)
                 {
-                    int langId = languageName.First();
+                    int langId = languageIdsAccordingName.First();
                     context.Words.Add(new Word
                     {
                         LanguageId = langId,
                         Text = word
                     });
+                    context.SaveChanges();
                 }
                 else
                 {
