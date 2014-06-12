@@ -16,6 +16,10 @@
 
         return false;
     }
+
+    function displayFormAddLang() {
+
+    }
 </script>
 
 <span class="tooltip-content">
@@ -39,5 +43,13 @@
             <tr><td>Very small word</td></tr>
         <%} %>
     </table>
+    <%--<div id="form_add_lang">
+        <a href="#" onclick="displayFormAddLang()">Add language</a>
+        <form id="lang-form" action="/Home/AddLang" method="POST" data-ajax-url="/Home/AddCommentAjax" data-ajax-success="OnSuccessComment" data-ajax-method="POST" data-ajax="true">
+            <input type="text" name="lang" value="Any Lang"/>
+            <input type="submit" value="Add">
+        </form>
+    </div>
+    <a href="#" onclick="displayFormAddLang()">Add language</a>--%>
     <input id="word_in_tooltip" type="hidden" value="<%=@Model.CurrentWord %>"/>
 </span>

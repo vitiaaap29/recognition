@@ -45,5 +45,21 @@ namespace translator.Controllers
             return result;
         }
 
+        //[HttpPost]
+        //public ActionResult AddLang(String lang, String word)
+        //{
+        //    ActionResult result = null;
+        //    dbAdapter = new Translator();
+        //    try
+        //    {
+        //        dbAdapter.AddLang(word, lang);
+        //        result = Content(succesAddWordMessage);
+        //    }
+        //    catch (UndefineLangException e)
+        //    {
+        //        result = Content(failAddWordMessage);
+        //    }
+        //    return result;
+        //}
     }
 }

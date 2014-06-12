@@ -110,5 +110,23 @@ namespace translator.Models
                 }
             }
         }
+
+        //public void AddLang(String lang, String word)
+        //{
+        //    using (var context = new TranslatorContext())
+        //    {
+        //        Language addedLang = new Language { Name = lang };
+        //        context.Langs.Add(addedLang);
+
+        //        int addedLangId = (from l in context.Langs where l.Name == lang select l.LanguageId).First();
+
+        //        context.Words.Add(new Word
+        //        {
+        //            LanguageId = addedLangId,
+        //            Text = word
+        //        });
+        //        context.SaveChanges();
+        //    }
+        //}
     }
 }
